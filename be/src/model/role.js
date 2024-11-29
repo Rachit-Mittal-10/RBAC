@@ -7,6 +7,7 @@ class Role{
                 "SELECT * FROM role WHERE name = ?",
                 [name]
             );
+            return result;
         }
         catch(err){
             throw err;

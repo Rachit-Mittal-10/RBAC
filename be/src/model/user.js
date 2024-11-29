@@ -8,7 +8,7 @@ class User{
             const hashedPassword = await bcrypt.hash(password,10);
             const [result] = await dbConn.promise().query(
                 "INSERT INTO users(username,password,email) VALUES (?,?,?);",
-                [username,password,email]
+                [username,hashedPassword,email]
             );
             return result;
         }
@@ -34,6 +34,7 @@ class User{
                 "SELECT * FROM users WHERE email = ?",
                 [email]
             );
+            return result;
         }
         catch(err){
             throw err;
