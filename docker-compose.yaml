@@ -1,7 +1,7 @@
 services:
   db:
     image: mysql:8.0
-    container_name: db 
+    container_name: db
     environment:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -11,14 +11,19 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql-data:/var/lib/mysql
     networks:
       - rbac-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=rootpassword"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: always  # Optionally add to restart container if unhealthy
 
   backend:
     build:
-      context: ./be 
+      context: ./be
     container_name: rbac-be
     env_file:
       - ./be/.env  
@@ -34,6 +39,8 @@ services:
       - db
     networks:
       - rbac-network
+    volumes:
+      - ./be/src:/app/backend/src
 
 networks:
   rbac-network:

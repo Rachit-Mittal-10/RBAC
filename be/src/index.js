@@ -7,7 +7,7 @@ const cors = require("cors");
 const app = express();
 
 //Middleware to parse JSON file
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 //Routes
